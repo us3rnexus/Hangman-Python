@@ -25,9 +25,10 @@ def col_blue(text):
 
 # -------- Simulated processing --------
 def Check():
-    for i in range(5):
-        print("Comparing" + "." * (i & 4), end='\r')
+    for i in range(1, 6):
+        print(col_green("Comparing") + col_green(".") * i, end='\r')
         time.sleep(random.uniform(0.4, 0.6))
+    print(" " * 20, end='\r')  # Clear line after animation
 
 # -------- Main Hangman Game Function --------
 def hangman():
@@ -40,6 +41,7 @@ def hangman():
     intro = "Welcome to Hangman!"
     print(lght_cyn(intro))
     print(lght_cyn("Word:"), " ".join(guessed))
+    used_words = []
     while attempts > 0 and "_" in guessed:
         guess = input(col_green("Guess a letter or word: ")).lower()
         if not guess.isalpha():
@@ -66,6 +68,11 @@ def hangman():
                 time.sleep(2)
                 clear()
         else:
+            if guess in used_words:
+                print(col_yellow("You already guessed that word!\n"))
+                time.sleep(2)
+                continue
+            used_words.append(guess)
             if guess == word:
                 guessed = list(word)
                 print(col_blue("Good guess!\n"))
@@ -77,8 +84,8 @@ def hangman():
                 time.sleep(2)
                 clear()
         print(lght_cyn("Word:"), " ".join(guessed))
-        if len(guess) == 1:
-            print(lght_cyn("Used letters:"), ", ".join(used_letters), "\n")
+        print(lght_cyn("Used letters:"), ", ".join(used_letters) if used_letters else "None")
+        print(lght_cyn("Used words:"), ", ".join(used_words) if used_words else "None", "\n")
     if "_" not in guessed:
         print(col_green("Congratulations! You guessed the word:"), word, "\n")
     else:
